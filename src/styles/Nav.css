@@ -1,0 +1,19 @@
+header {
+}
+
+ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+li :hover {
+    color: #ffd2307c;
+    text-decoration: underline solid #ffd230 1px;
+    text-underline-offset: 2px;
+}
+
+li :focus {
+    text-decoration: underline solid #ffd230 1px;
+    text-underline-offset: 2px;
+}

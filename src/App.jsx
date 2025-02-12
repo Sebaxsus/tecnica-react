@@ -1,19 +1,20 @@
-import { Route, Router } from 'react-router-dom'
 import './App.css'
-import Home from './pages/Home.jsx'
-import PokemonType from './pages/PokemonType.jsx'
-import PokemonAbilities from './pages/PokemonAbilities.jsx'
+import Rutas from './routes/Rutas.jsx'
+import Nav from './components/Nav.jsx'
 
 
+// const data = await getAbility("overgrow").then((res) => res.data).catch((err) => console.error("Fallo",err))
 function App() {
+
 
   return (
     <>
-      <Router>
-        <Route path='/' element={<Home />} />
-        <Route path='/type' element={<PokemonType />}/>
-        <Route path='/abilitie' element={<PokemonAbilities />}/>
-      </Router>
+      <div className="fixed inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+      </div>
+      <Nav></Nav>
+      <main >
+        <Rutas />
+      </main>
     </>
   )
 }
