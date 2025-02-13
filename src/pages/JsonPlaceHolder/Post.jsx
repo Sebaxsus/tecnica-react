@@ -23,6 +23,7 @@ export default function Post() {
     useEffect(() => {
         getPostById(params.id).then(data => { setPubli(data); setLoading(false) })
         getPostComments(params.id).then(data => {setComments(data); setLoadingC(false)})
+        document.getElementById('searchBox').value = ""
     }, [params.id])
 
     const handleClick = () => {
@@ -53,10 +54,8 @@ export default function Post() {
                     // console.log(data.length)
                     let newData = []
                     if (data.length > 1) {
-                        console.log("Entro 1")
                         newData = [actPost, ...data]
                     } else {
-                        console.log("Entro 2")
                         newData = [actPost, data]
                     }
                     // console.log(data, actPost , [data, actPost])
@@ -163,7 +162,7 @@ export default function Post() {
                                 />
                             </label>
                             <br />
-                            <button type="submit">Actualizar</button>
+                            <button type="submit" onClick={() => {setIsModalOpen(false)}}>Actualizar</button>
                         </form>
                     </Modal>
                     <div className="flex flex-col gap-y-5 h-[300px] w-auto overflow-y-scroll px-2" id="commetsContainer">

@@ -58,9 +58,10 @@ export const putPost = async ({data = {}, id}) => {
 }
 
 export const postPost = async (data) => {
+    console.log(data)
     try{
-       const res = await axios.post(`${BASE_URL}/post`, data)
-       return res.status
+       const res = await axios.post(`${BASE_URL}/posts`, data)
+       return res
     } catch (err) {
         console.error("Fallo el Post post: ", err)
         throw err
