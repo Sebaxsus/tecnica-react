@@ -55,4 +55,4 @@ export const postPost = async (data) => {
     }
 }
 
-export default { getPost, getPostById, getAlbums, postPost }
+export default { getPost, getPostById, getAlbums, getPostComments, postPost }

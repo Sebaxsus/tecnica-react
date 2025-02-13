@@ -1,0 +1,17 @@
+#commetsContainer {
+    scrollbar-gutter: stable;
+}
+
+#commetsContainer::-webkit-scrollbar {
+    padding-left: 2px;
+    width: 5px;
+}
+
+#commetsContainer::-webkit-scrollbar-thumb {
+    background-color: rgba(233, 204, 38, 0.61);
+    border-radius: 5px;
+}
+
+#commetsContainer::-webkit-scrollbar-track:hover {
+    background: #555;
+}
