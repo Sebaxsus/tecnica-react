@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { data, useParams } from "react-router-dom"
 
 import { getPostById, getPostComments, putPost } from "../../services/JsonPlace"
 import Modal from "../../components/Modal"
@@ -16,6 +16,8 @@ export default function Post() {
     const [loadingC, setLoadingC] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [recentUpdates, setRecentUpdates] = useState(null)
+    const [formTitle, setFormTitle] = useState('')
+    const [formBody, setFormBody] = useState('')
     const params = useParams()
 
     useEffect(() => {
@@ -23,21 +25,53 @@ export default function Post() {
         getPostComments(params.id).then(data => {setComments(data); setLoadingC(false)})
     }, [params.id])
 
+    const handleClick = () => {
+        setFormTitle(publi.title)
+        setFormBody(publi.body)
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const title = document.getElementById('modalTitle').value
-        const body = document.getElementById('modalBody').value
+        // const title = document.getElementById('modalTitle').value
+        // const body = document.getElementById('modalBody').value
+
         const actPost = {
             id: publi.id,
-            title: title,
-            body: body,
+            title: formTitle,
+            body: formBody,
             userId: publi.userId
         }
 
         try{
             const res = await putPost({data: JSON.stringify(actPost),id: params.id})
             if (res.status === 200) {
-                window.localStorage.setItem('postPut', res.data)
+                // console.log("Se guardo correctamente: ", res.data)
+                const dataStorage = window.localStorage.getItem('postPut')
+                // console.log('Datastore ', dataStorage , actPost)
+                if (dataStorage) {
+                    const data = JSON.parse(dataStorage)
+                    // console.log(data.length)
+                    let newData = []
+                    if (data.length > 1) {
+                        console.log("Entro 1")
+                        newData = [actPost, ...data]
+                    } else {
+                        console.log("Entro 2")
+                        newData = [actPost, data]
+                    }
+                    // console.log(data, actPost , [data, actPost])
+                    
+                    // const data = JSON.parse(dataStorage)
+                    // dataStorage = [data, newData]
+                    // console.log('Before save; ', newData)
+                    window.localStorage.setItem('postPut', JSON.stringify(newData))
+                } else {
+                    // console.log('Entor a save solo')
+                    const data = JSON.stringify(actPost)
+                    window.localStorage.setItem('postPut', [data])
+                }
+                
+                // console.log('Se guardo en LocalStorage: ', window.localStorage.getItem('postPut'), JSON.parse(window.localStorage.getItem('postPut')))
             } else {
                 console.error('Error de Peticion, Codigo: ', res.status)
             }
@@ -95,7 +129,7 @@ export default function Post() {
                     <main className="flex flex-col border border-white rounded-md px-1 py-4 h-[200px] w-full items-center gap-y-5">
                         <h1 className="text-md text-center w-[50ch]">{publi.title}</h1>
                         <p className="text-sm opacity-65 w-[50ch] indent-5 text-pretty">{publi.body}</p>
-                        <a className="flex items-center gap-x-5" onClick={() => setIsModalOpen(true)}>
+                        <a className="flex items-center gap-x-5" onClick={() => {setIsModalOpen(true);handleClick()}}>
                             Editar
                             <img src={editIcon} alt="icono de Editar" className="aspect-square h-5"/>
                         </a>
@@ -111,6 +145,8 @@ export default function Post() {
                                     placeholder="Nuevo título"
                                     required
                                     id="modalTitle"
+                                    value={formTitle}
+                                    onChange={(e) => {setFormTitle(e.target.value)}}
                                     className=" focus-visible:outline-0 border-b  w-full"
                                 />
                             </label>
@@ -121,6 +157,8 @@ export default function Post() {
                                     placeholder="Nuevo contenido"
                                     required
                                     id="modalBody"
+                                    value={formBody}
+                                    onChange={(e) => {setFormBody(e.target.value)}}
                                     className="h-full border border-gray-300/90 rounded-2xl p-2"
                                 />
                             </label>

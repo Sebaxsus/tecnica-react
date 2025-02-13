@@ -47,7 +47,7 @@ export const getAlbums = async () => {
 }
 
 export const putPost = async ({data = {}, id}) => {
-    console.log(`${BASE_URL}/posts/${id}`," https://jsonplaceholder.typicode.com/posts/1 ", data)
+    // console.log(`${BASE_URL}/posts/${id}`," https://jsonplaceholder.typicode.com/posts/1 ", data)
     try{
         const res = await axios.put(`${BASE_URL}/posts/${id}`, data)
         return res
