@@ -2,11 +2,13 @@ import axios from "axios";
 
 const BASE_URL = "https://jsonplaceholder.typicode.com"
 
-export const getPost = async () => {
+export const getPost = async (title) => {
     try{
         const res = await axios.get(`${BASE_URL}/posts`)
-        return res.data
-
+        const data = res.data.filter((post) => {
+            if (post.title.toLowerCase().includes(title)) return post
+        })
+        return data
     } catch (err) {
         console.error("Fallo el get Post: ", err)
         throw err
@@ -19,6 +21,16 @@ export const getPostById = async (id) => {
         return res.data
     } catch (err) {
         console.error("Fallo el get Post by Id: ", err)
+        throw err
+    }
+}
+
+export const getPostComments = async (id) => {
+    try{
+        const res = await axios.get(`${BASE_URL}/posts/${id}/comments`)
+        return res.data
+    }catch (err) {
+        console.error("Fallo el get Post Comments: ", err)
         throw err
     }
 }

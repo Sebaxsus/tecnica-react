@@ -1,4 +1,4 @@
-import { Route, Routes, useParams } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Home from '../pages/Home.jsx'
 import PokemonType from '../pages/Pokemon/PokemonType.jsx'
 import PokemonAbilities from '../pages/Pokemon/PokemonAbilities.jsx'
@@ -8,7 +8,6 @@ import Posts from '../pages/JsonPlaceHolder/Posts.jsx'
 
 const Rutas = () => {
     return(
-
         <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/type' element={<PokemonType />}/>
