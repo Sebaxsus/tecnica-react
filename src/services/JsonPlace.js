@@ -1,4 +1,5 @@
 import axios from "axios";
+import { data } from "react-router-dom";
 
 const BASE_URL = "https://jsonplaceholder.typicode.com"
 
@@ -45,6 +46,17 @@ export const getAlbums = async () => {
     }
 }
 
+export const putPost = async ({data = {}, id}) => {
+    console.log(`${BASE_URL}/posts/${id}`," https://jsonplaceholder.typicode.com/posts/1 ", data)
+    try{
+        const res = await axios.put(`${BASE_URL}/posts/${id}`, data)
+        return res
+    } catch (err) {
+        console.error("Fallo el Put post: ", err)
+        throw err
+    }
+}
+
 export const postPost = async (data) => {
     try{
        const res = await axios.post(`${BASE_URL}/post`, data)
@@ -55,4 +67,4 @@ export const postPost = async (data) => {
     }
 }
 
-export default { getPost, getPostById, getAlbums, getPostComments, postPost }
+export default { getPost, getPostById, getAlbums, getPostComments, postPost, putPost }

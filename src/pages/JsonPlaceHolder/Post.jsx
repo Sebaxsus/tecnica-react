@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
-import { getPostById, getPostComments } from "../../services/JsonPlace"
 import { useParams } from "react-router-dom"
+
+import { getPostById, getPostComments, putPost } from "../../services/JsonPlace"
+import Modal from "../../components/Modal"
+
 import userIcon from '../../assets/user.svg'
 import enterIcon from '../../assets/enter.svg'
+import editIcon from '../../assets/edit.svg'
 import '../../styles/Post.css'
 
 export default function Post() {
@@ -10,12 +14,37 @@ export default function Post() {
     const [comments, setComments] = useState(null)
     const [loading, setLoading] = useState(true)
     const [loadingC, setLoadingC] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [recentUpdates, setRecentUpdates] = useState(null)
     const params = useParams()
 
     useEffect(() => {
         getPostById(params.id).then(data => { setPubli(data); setLoading(false) })
         getPostComments(params.id).then(data => {setComments(data); setLoadingC(false)})
     }, [params.id])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const title = document.getElementById('modalTitle').value
+        const body = document.getElementById('modalBody').value
+        const actPost = {
+            id: publi.id,
+            title: title,
+            body: body,
+            userId: publi.userId
+        }
+
+        try{
+            const res = await putPost({data: JSON.stringify(actPost),id: params.id})
+            if (res.status === 200) {
+                window.localStorage.setItem('postPut', res.data)
+            } else {
+                console.error('Error de Peticion, Codigo: ', res.status)
+            }
+        } catch (err) {
+            console.error("Error al actualizar el post:", err);
+        }
+    }
 
     if (loading) {
         return (
@@ -60,13 +89,45 @@ export default function Post() {
         <>
             <article className="grid grid-cols-1 gap-2 mx-[10px] my-[15px] justify-items-center over">
                 <aside>
-
+                    {}
                 </aside>
                 <section className="flex flex-col text-pretty gap-y-10 items-center px-1 py-4">
                     <main className="flex flex-col border border-white rounded-md px-1 py-4 h-[200px] w-full items-center gap-y-5">
                         <h1 className="text-md text-center w-[50ch]">{publi.title}</h1>
                         <p className="text-sm opacity-65 w-[50ch] indent-5 text-pretty">{publi.body}</p>
+                        <a className="flex items-center gap-x-5" onClick={() => setIsModalOpen(true)}>
+                            Editar
+                            <img src={editIcon} alt="icono de Editar" className="aspect-square h-5"/>
+                        </a>
+                        
                     </main>
+                    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                        <h2 className="font-bold underline underline-offset-2 decoration-[#2f3acc]">Editar Post</h2>
+                        <form onSubmit={handleSubmit} className="flex flex-col w-full h-full justify-center backdrop-blur-sm">
+                            <label className="flex gap-2">
+                                <h2>Titulo: </h2>
+                                <input
+                                    type="text"
+                                    placeholder="Nuevo título"
+                                    required
+                                    id="modalTitle"
+                                    className=" focus-visible:outline-0 border-b  w-full"
+                                />
+                            </label>
+                            <br />
+                            <label className="flex flex-col gap-y-4 h-[-webkit-fill-available]">
+                                <h2>Contenido: </h2>
+                                <textarea
+                                    placeholder="Nuevo contenido"
+                                    required
+                                    id="modalBody"
+                                    className="h-full border border-gray-300/90 rounded-2xl p-2"
+                                />
+                            </label>
+                            <br />
+                            <button type="submit">Actualizar</button>
+                        </form>
+                    </Modal>
                     <div className="flex flex-col gap-y-5 h-[300px] w-auto overflow-y-scroll px-2" id="commetsContainer">
                         <div id="commentBox" className="flex gap-x-2 sticky top-0 backdrop-blur-md rounded-sm">
                             <img src={userIcon} alt="Icono de Entrar" className="aspect-square h-10"/>
